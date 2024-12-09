@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="logo.png">
+    <title>Order Form - Faidul Islam Merchandise</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #3c74e2;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        .form-container {
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 14px;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #3c74e2;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #3056b2;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #3c74e2;
+            color: white;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .form-container {
+                padding: 15px;
+            }
+
+            button {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Order Form</h1>
+</header>
+
+<main>
+    <div class="form-container">
+        <h2>Order Form</h2>
+        <form action="submit_order.php" method="POST">
+            <label for="item">Select Item:</label>
+            <select id="item" name="item" required>
+                <option value="T-Shirt">Official T-Shirt</option>
+                <option value="Cap">Official Cap</option>
+                <option value="Hoodie">Official Hoodie</option>
+                <option value="Mug">Minecraft Mug</option>
+                <option value="Notebook">Minecraft Notebook</option>
+                <option value="Poster">Minecraft Poster</option>
+                <option value="Keychain">Minecraft Keychain</option>
+                <option value="Backpack">Minecraft Backpack</option>
+                <option value="Pillow">Minecraft Pillow</option>
+                <option value="Mousepad">Minecraft Mousepad</option>
+                <option value="Socks">Minecraft Socks</option>
+                <option value="Beanie">Minecraft Beanie</option>
+                <option value="Phone Case">Minecraft Phone Case</option>
+            </select>
+
+            <!-- Size selection (initially hidden) -->
+            <div id="size-container" style="display: none;">
+                <label for="size">Select Size:</label>
+                <select id="size" name="size">
+                    <option value="XS">XS</option>
+                    <option value="S">S</option>
+                    <option value="M">M</option>
+                    <option value="L">L</option>
+                    <option value="XL">XL</option>
+                    <option value="XXL">XXL</option>
+                    <option value="XXXL">XXXL</option>
+                </select>
+            </div>
+
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity" name="quantity" min="1" value="1" required>
+
+            <label for="name">Your Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="email">Your Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="address">Shipping Address:</label>
+            <textarea id="address" name="address" rows="4" required></textarea>
+
+            <button type="submit">Submit Order</button>
+        </form>
+    </div>
+</main>
+
+<footer>
+    <p>&copy; 2024 Faidul Islam</p>
+</footer>
+
+<script>
+    // Dynamically show size selection for certain items
+    const itemSelect = document.getElementById('item');
+    const sizeContainer = document.getElementById('size-container');
+    
+    itemSelect.addEventListener('change', function() {
+        const selectedItem = itemSelect.value;
+        if (selectedItem === 'T-Shirt' || selectedItem === 'Hoodie') {
+            sizeContainer.style.display = 'block';
+        } else {
+            sizeContainer.style.display = 'none';
+        }
+    });
+</script>
+
+</body>
+</html>
