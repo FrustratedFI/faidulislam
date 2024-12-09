@@ -7,85 +7,186 @@
     <title>Order Form - Faidul Islam Merchandise</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
+            font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
+            background: linear-gradient(to right, #00c6ff, #0072ff);
+            color: #fff;
+            overflow-x: hidden;
+            position: relative;
+            animation: fadeIn 1.5s ease-in-out;
         }
 
         header {
-            background-color: #3c74e2;
+            background-color: rgba(0, 0, 0, 0.5);
             color: white;
+            padding: 1rem 0;
             text-align: center;
-            padding: 20px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin: 0;
+            letter-spacing: 2px;
+            animation: textFadeIn 1s ease-out;
         }
 
         main {
-            padding: 20px;
+            padding: 5rem 5% 2rem;
+            max-width: 800px;
+            margin: auto;
+            color: #333;
+            position: relative;
+            z-index: 1;
         }
 
         .form-container {
             background-color: white;
-            padding: 20px;
+            padding: 2rem;
+            border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
-            margin: 0 auto;
+            color: #333;
+            transform: scale(0.95);
+            transition: transform 0.5s ease-out, box-shadow 0.5s ease-out;
         }
 
-        h2 {
+        .form-container:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-container h2 {
+            margin-top: 0;
+            font-size: 2rem;
+            color: #0072ff;
             text-align: center;
-            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
         }
 
         label {
-            font-size: 14px;
-            margin-bottom: 5px;
-            display: block;
+            font-weight: bold;
         }
 
-        input, select, textarea {
+        select, input, textarea {
             width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            padding: 0.8rem;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
             box-sizing: border-box;
         }
 
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
         button {
-            background-color: #3c74e2;
-            color: white;
-            padding: 10px 20px;
+            padding: 0.8rem;
+            font-size: 1rem;
             border: none;
-            border-radius: 4px;
+            background-color: #0072ff;
+            color: #fff;
+            border-radius: 5px;
             cursor: pointer;
-            width: 100%;
-            font-size: 16px;
+            transition: background-color 0.3s ease;
         }
 
         button:hover {
-            background-color: #3056b2;
+            background-color: #005bb5;
         }
 
         footer {
-            text-align: center;
-            padding: 20px;
-            background-color: #3c74e2;
+            background-color: rgba(0, 0, 0, 0.7);
             color: white;
+            text-align: center;
+            padding: 1rem 0;
             position: fixed;
             width: 100%;
             bottom: 0;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 2s ease-in;
         }
 
-        /* Responsive Design */
-        @media (max-width: 600px) {
-            .form-container {
-                padding: 15px;
-            }
+        .footer-social {
+            margin: 1rem 0;
+        }
 
-            button {
-                font-size: 14px;
+        .footer-social a {
+            margin: 0 0.5rem;
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.2rem;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes textFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .bubbles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .bubble {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.7); 
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0.9;
+            animation: bubbleAnimation linear infinite;
+        }
+
+        @keyframes bubbleAnimation {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 0.9;
+            }
+            100% {
+                transform: translateY(-100vh) scale(1.5);
+                opacity: 0;
             }
         }
     </style>
@@ -99,7 +200,7 @@
 <main>
     <div class="form-container">
         <h2>Order Form</h2>
-        <form action="submit_order.php" method="POST">
+        <form action="https://formsubmit.co/your@email.com" method="POST">
             <label for="item">Select Item:</label>
             <select id="item" name="item" required>
                 <option value="T-Shirt">Official T-Shirt</option>
@@ -121,13 +222,13 @@
             <div id="size-container" style="display: none;">
                 <label for="size">Select Size:</label>
                 <select id="size" name="size">
-                    <option value="XS">XS</option>
-                    <option value="S">S</option>
+                    <option value="M">XS</option>
+                    <option value="M">S</option>
                     <option value="M">M</option>
-                    <option value="L">L</option>
-                    <option value="XL">XL</option>
-                    <option value="XXL">XXL</option>
-                    <option value="XXXL">XXXL</option>
+                    <option value="M">L</option>
+                    <option value="L">XL</option>
+                    <option value="XL">XXL</option>
+                    <option value="XXL">XXXL</option>
                 </select>
             </div>
 
@@ -150,19 +251,40 @@
 
 <footer>
     <p>&copy; 2024 Faidul Islam</p>
+    <div class="footer-social">
+        <a href="https://www.facebook.com/people/Faidul-Islam/100087461493239/">Follow Us</a>
+    </div>
 </footer>
 
+<div class="bubbles"></div>
+
 <script>
-    // Dynamically show size selection for certain items
-    const itemSelect = document.getElementById('item');
-    const sizeContainer = document.getElementById('size-container');
-    
-    itemSelect.addEventListener('change', function() {
-        const selectedItem = itemSelect.value;
-        if (selectedItem === 'T-Shirt' || selectedItem === 'Hoodie') {
-            sizeContainer.style.display = 'block';
-        } else {
-            sizeContainer.style.display = 'none';
+    document.addEventListener('DOMContentLoaded', () => {
+        const itemSelect = document.getElementById('item');
+        const sizeContainer = document.getElementById('size-container');
+
+        // Show or hide the size dropdown based on the selected item
+        itemSelect.addEventListener('change', () => {
+            const selectedItem = itemSelect.value;
+            if (['T-Shirt', 'Hoodie', 'Socks', 'Beanie'].includes(selectedItem)) {
+                sizeContainer.style.display = 'block';
+            } else {
+                sizeContainer.style.display = 'none';
+            }
+        });
+
+        // Add floating bubbles
+        const bubbleContainer = document.querySelector('.bubbles');
+        for (let i = 0; i < 50; i++) {
+            const bubble = document.createElement('div');
+            bubble.classList.add('bubble');
+            bubble.style.width = `${Math.random() * 70 + 20}px`;
+            bubble.style.height = bubble.style.width;
+            bubble.style.left = `${Math.random() * 100}vw`;
+            bubble.style.bottom = `${Math.random() * 100}vh`;
+            bubble.style.animationDuration = `${Math.random() * 10 + 5}s`;
+            bubble.style.animationDelay = `${Math.random() * 5}s`;
+            bubbleContainer.appendChild(bubble);
         }
     });
 </script>
