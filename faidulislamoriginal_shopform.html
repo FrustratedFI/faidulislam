@@ -190,13 +190,6 @@
             }
         }
     </style>
-
-<script
-    chatbot_id="66d2de19d8b17b72a4c6752d"
-    src="https://app.thinkstack.ai/bot/thinkstackai-loader.min.js">
-</script>
-
-
 </head>
 <body>
 
@@ -208,39 +201,51 @@
     <div class="form-container">
         <h2>Order Form</h2>
         <form action="https://api.getform.io/v1/forms/bmddryza?token=7DqTxJSsfIEGXvIPehxAWYKaMLvJDkpDIpEIE1K9s4S5XUBlqcE9dFWEGPzn" method="POST">
-    <label for="item">Select Item:</label>
-    <select id="item" name="item" required>
-        <option value="T-Shirt">Official T-Shirt</option>
-        <option value="Cap">Official Cap</option>
-        <option value="Hoodie">Official Hoodie</option>
-        <option value="Mug">Minecraft Mug</option>
-        <option value="Notebook">Minecraft Notebook</option>
-        <option value="Poster">Minecraft Poster</option>
-        <option value="Keychain">Minecraft Keychain</option>
-        <option value="Backpack">Minecraft Backpack</option>
-        <option value="Pillow">Minecraft Pillow</option>
-        <option value="Mousepad">Minecraft Mousepad</option>
-        <option value="Socks">Minecraft Socks</option>
-        <option value="Beanie">Minecraft Beanie</option>
-        <option value="Phone Case">Minecraft Phone Case</option>
-    </select>
-    
-    <label for="quantity">Quantity:</label>
-    <input type="number" id="quantity" name="quantity" min="1" value="1" required>
-    
-    <label for="name">Your Name:</label>
-    <input type="text" id="name" name="name" required>
-    
-    <label for="email">Your Email:</label>
-    <input type="email" id="email" name="email" required>
-    
-    <label for="address">Shipping Address:</label>
-    <textarea id="address" name="address" rows="4" required></textarea>
-    
-    <button type="submit">Submit Order</button>
-</form>
+            <label for="item">Select Item:</label>
+            <select id="item" name="item" required>
+                <option value="T-Shirt">Official T-Shirt</option>
+                <option value="Cap">Official Cap</option>
+                <option value="Hoodie">Official Hoodie</option>
+                <option value="Mug">Minecraft Mug</option>
+                <option value="Notebook">Minecraft Notebook</option>
+                <option value="Poster">Minecraft Poster</option>
+                <option value="Keychain">Minecraft Keychain</option>
+                <option value="Backpack">Minecraft Backpack</option>
+                <option value="Pillow">Minecraft Pillow</option>
+                <option value="Mousepad">Minecraft Mousepad</option>
+                <option value="Socks">Minecraft Socks</option>
+                <option value="Beanie">Minecraft Beanie</option>
+                <option value="Phone Case">Minecraft Phone Case</option>
+            </select>
 
+            <!-- Size selection (initially hidden) -->
+            <div id="size-container" style="display: none;">
+                <label for="size">Select Size:</label>
+                <select id="size" name="size">
+                    <option value="M">XS</option>
+                    <option value="M">S</option>
+                    <option value="M">M</option>
+                    <option value="M">L</option>
+                    <option value="L">XL</option>
+                    <option value="XL">XXL</option>
+                    <option value="XXL">XXXL</option>
+                </select>
+            </div>
 
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity" name="quantity" min="1" value="1" required>
+
+            <label for="name">Your Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="email">Your Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="address">Shipping Address:</label>
+            <textarea id="address" name="address" rows="4" required></textarea>
+
+            <button type="submit">Submit Order</button>
+        </form>
     </div>
 </main>
 
@@ -255,8 +260,21 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const bubbleContainer = document.querySelector('.bubbles');
+        const itemSelect = document.getElementById('item');
+        const sizeContainer = document.getElementById('size-container');
 
+        // Show or hide the size dropdown based on the selected item
+        itemSelect.addEventListener('change', () => {
+            const selectedItem = itemSelect.value;
+            if (['T-Shirt', 'Hoodie', 'Socks', 'Beanie'].includes(selectedItem)) {
+                sizeContainer.style.display = 'block';
+            } else {
+                sizeContainer.style.display = 'none';
+            }
+        });
+
+        // Add floating bubbles
+        const bubbleContainer = document.querySelector('.bubbles');
         for (let i = 0; i < 50; i++) {
             const bubble = document.createElement('div');
             bubble.classList.add('bubble');
@@ -265,7 +283,7 @@
             bubble.style.left = `${Math.random() * 100}vw`;
             bubble.style.bottom = `${Math.random() * 100}vh`;
             bubble.style.animationDuration = `${Math.random() * 10 + 5}s`;
-            bubble.style.animationDelay = `${Math.random() * 10}s`;
+            bubble.style.animationDelay = `${Math.random() * 5}s`;
             bubbleContainer.appendChild(bubble);
         }
     });
