@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="logo.png">
+    <title>Faidul Islam - Services</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #00c6ff, #0072ff);
+            color: #fff;
+            overflow-x: hidden;
+            position: relative;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        header {
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 1rem 0;
+            text-align: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin: 0;
+            letter-spacing: 2px;
+            animation: textFadeIn 1s ease-out;
+        }
+
+        main {
+            padding: 5rem 5% 2rem;
+            max-width: 1000px;
+            margin: auto;
+            color: #333;
+            position: relative;
+            z-index: 1;
+        }
+
+        section {
+            margin-bottom: 3rem;
+            background-color: white;
+            padding: 3rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            color: #333;
+            transform: scale(0.95);
+            transition: transform 0.5s ease-out, box-shadow 0.5s ease-out;
+        }
+
+        section:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        section h2 {
+            color: #004080;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            animation: colorPulse 1.5s infinite;
+        }
+
+        section p {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            color: #666;
+        }
+
+        .price {
+            font-size: 1.5rem;
+            color: #004080;
+            margin-top: 1rem;
+        }
+
+        footer {
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            text-align: center;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 2s ease-in;
+        }
+
+        .skills-section {
+            margin-bottom: 3rem;
+            background-color: white;
+            padding: 3rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            color: #333;
+            transform: scale(0.95);
+            transition: transform 0.5s ease-out, box-shadow 0.5s ease-out;
+        }
+
+        .skills-section h2 {
+            color: #004080;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .skill {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .skill-name {
+            font-size: 1.3rem;
+            color: #666;
+            margin: 0;
+            width: 30%;
+            text-align: left;
+        }
+
+        .skill-percentage {
+            font-size: 1.3rem;
+            color: #666;
+            margin: 0;
+            width: 10%;
+            text-align: right;
+        }
+
+        .skill-bar {
+            background-color: #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+            position: relative;
+            height: 10px;
+            width: 60%;
+            margin-left: 1rem;
+        }
+
+        .skill-bar .skill-fill {
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(0, 114, 255, 0.7),
+                rgba(0, 114, 255, 0.7) 10px,
+                rgba(255, 255, 255, 0.7) 10px,
+                rgba(255, 255, 255, 0.7) 20px
+            );
+            height: 100%;
+            width: 0;
+            transition: width 2s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes textFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes colorPulse {
+            0% {
+                color: #004080;
+            }
+            50% {
+                color: #003366;
+            }
+            100% {
+                color: #004080;
+            }
+        }
+
+        .animate-on-hover {
+            transition: transform 0.2s ease-out;
+        }
+
+        .bubbles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .bubble {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0.9;
+            animation: bubbleAnimation linear infinite;
+        }
+
+        @keyframes bubbleAnimation {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 0.9;
+            }
+            100% {
+                transform: translateY(-100vh) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        .testimonials-section {
+            margin-bottom: 3rem;
+            background-color: white;
+            padding: 3rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            color: #333;
+            transform: scale(0.95);
+            transition: transform 0.5s ease-out, box-shadow 0.5s ease-out;
+        }
+
+        .testimonials-section h2 {
+            color: #004080;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .testimonial {
+            background-color: #f9f9f9;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .testimonial::before {
+            content: open-quote;
+            font-size: 3rem;
+            color: #00c6ff;
+            position: absolute;
+            top: -1rem;
+            left: 1rem;
+        }
+
+        .testimonial::after {
+            content: close-quote;
+            font-size: 3rem;
+            color: #00c6ff;
+            position: absolute;
+            bottom: -1rem;
+            right: 1rem;
+        }
+
+        .testimonial p {
+            font-size: 1.2rem;
+            color: #666;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .testimonial-author {
+            margin-top: 1rem;
+            font-size: 1.1rem;
+            color: #004080;
+            font-weight: bold;
+        }
+
+    </style>
+
+<script
+    chatbot_id="66d2de19d8b17b72a4c6752d"
+    src="https://app.thinkstack.ai/bot/thinkstackai-loader.min.js">
+</script>
+
+
+</head>
+<body>
+
+<header>
+    <h1>Faidul Islam - Services</h1>
+</header>
+
+<main>
+    <section id="hire-me" class="animate-on-hover">
+        <h2>Services I provide</h2>
+        <p>Welcome! Here you can find a list of services I offer. Whether you need help with web development, Minecraft skin making, or server management, I'm here to assist you. Below are the services I provide along with their prices:</p>
+        
+        <div class="service">
+            <h3>Webpage Creation</h3>
+            <p>I can create a professional and engaging webpage tailored to your needs. From design to deployment, I ensure your webpage stands out.</p>
+            <p class="price">Price: 500TK</p>
+        </div>
+
+        <div class="service">
+            <h3>Minecraft Skin Making</h3>
+            <p>Need a custom Minecraft skin? I create unique and high-quality skins that match your style and preferences.</p>
+            <p class="price">Price: 50TK</p>
+        </div>
+
+        <div class="service">
+            <h3>Minecraft Server Management</h3>
+            <p>I offer Minecraft server management services, including setup, optimization, and maintenance to ensure a smooth and enjoyable experience.</p>
+            <p class="price">Price: 100TK/month</p>
+        </div>
+    </section>
+
+    <section id="skills" class="skills-section">
+        <h2>My Skills</h2>
+
+        <div class="skill">
+            <p class="skill-name">HTML</p>
+            <div class="skill-bar">
+                <div class="skill-fill" style="width: 98%;"></div>
+            </div>
+            <p class="skill-percentage">98%</p>
+        </div>
+
+        <div class="skill">
+            <p class="skill-name">CSS</p>
+            <div class="skill-bar">
+                <div class="skill-fill" style="width: 83%;"></div>
+            </div>
+            <p class="skill-percentage">83%</p>
+        </div>
+
+        <div class="skill">
+            <p class="skill-name">JavaScript</p>
+            <div class="skill-bar">
+                <div class="skill-fill" style="width: 96%;"></div>
+            </div>
+            <p class="skill-percentage">96%</p>
+        </div>
+
+        <div class="skill">
+            <p class="skill-name">Minecraft Skin Making</p>
+            <div class="skill-bar">
+                <div class="skill-fill" style="width: 99%;"></div>
+            </div>
+            <p class="skill-percentage">99%</p>
+        </div>
+
+        <div class="skill">
+            <p class="skill-name">Minecraft Server Management</p>
+            <div class="skill-bar">
+                <div class="skill-fill" style="width: 95%;"></div>
+            </div>
+            <p class="skill-percentage">95%</p>
+        </div>
+    </section>
+
+    <section id="testimonials" class="testimonials-section">
+        <h2>What My Clients Say</h2>
+
+        <div class="testimonial">
+            <p>"Faidul did an amazing job with my website. The design is stunning, and it functions flawlessly. Highly recommend his services!"</p>
+            <p class="testimonial-author">- Nahian Hasib</p>
+        </div>
+
+        <div class="testimonial">
+            <p>"The custom Minecraft skin Faidul made for me is incredible! He understood exactly what I wanted and delivered it perfectly."</p>
+            <p class="testimonial-author">- Java Builder</p>
+        </div>
+
+        <div class="testimonial">
+            <p>"My Minecraft server has never run smoother thanks to Faidul's management. His expertise is top-notch, and he was always available to help."</p>
+            <p class="testimonial-author">- Rifatul Roudro</p>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <p>&copy; 2024 Faidul Islam. All rights reserved.</p>
+</footer>
+
+<div class="bubbles">
+    <div class="bubble" style="width: 80px; height: 80px; left: 10%; animation-duration: 10s;"></div>
+    <div class="bubble" style="width: 60px; height: 60px; left: 30%; animation-duration: 12s;"></div>
+    <div class="bubble" style="width: 100px; height: 100px; left: 50%; animation-duration: 15s;"></div>
+    <div class="bubble" style="width: 120px; height: 120px; left: 70%; animation-duration: 20s;"></div>
+    <div class="bubble" style="width: 40px; height: 40px; left: 90%; animation-duration: 8s;"></div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const skillBars = document.querySelectorAll('.skill-fill');
+        skillBars.forEach(bar => {
+            const width = bar.style.width;
+            bar.style.width = '0';
+            setTimeout(() => {
+                bar.style.width = width;
+            }, 500);
+        });
+    });
+</script>
+
+</body>
+</html>

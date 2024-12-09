@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="logo.png">
+    <title>Faidul Islam - Contact Page</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #00c6ff, #0072ff);
+            color: #fff;
+            overflow-x: hidden;
+            position: relative;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        header {
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 1rem 0;
+            text-align: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin: 0;
+            letter-spacing: 2px;
+            animation: textFadeIn 1s ease-out;
+        }
+
+        main {
+            padding: 5rem 5% 2rem;
+            max-width: 1000px;
+            margin: auto;
+            color: #333;
+            position: relative; /* Ensure content is above the bubbles */
+            z-index: 1; /* Ensure content is above the bubbles */
+        }
+
+        section {
+            margin-bottom: 3rem;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            color: #333;
+            transition: transform 0.5s ease-out, box-shadow 0.5s ease-out;
+            position: relative;
+        }
+
+        section:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        section h2 {
+            color: #004080;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            animation: colorPulse 1.5s infinite;
+        }
+
+        section p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #666;
+        }
+
+        .contact-info {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .contact-info div {
+            margin-bottom: 1rem;
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .contact-form input, .contact-form textarea {
+            font-size: 1rem;
+            padding: 0.5rem;
+            margin: 0.5rem 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .contact-form button {
+            background-color: #004080;
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+        }
+
+        .contact-form button:hover {
+            background-color: #003366;
+        }
+
+        footer {
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            text-align: center;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 2s ease-in;
+        }
+
+        /* Bubble Animation Styles */
+        .bubbles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw; /* Ensure it covers full viewport width */
+            height: 100vh; /* Ensure it covers full viewport height */
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0; /* Ensure bubbles are behind the content */
+        }
+
+        .bubble {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.7); /* Brighter white for bubbles */
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0.9; /* Higher opacity for visibility */
+            animation: bubbleAnimation linear infinite;
+        }
+
+        @keyframes bubbleAnimation {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 0.9;
+            }
+            100% {
+                transform: translateY(-100vh) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        /* Keyframes for animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes textFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes colorPulse {
+            0% {
+                color: #004080;
+            }
+            50% {
+                color: #003366;
+            }
+            100% {
+                color: #004080;
+            }
+        }
+    </style>
+
+<script
+    chatbot_id="66d2de19d8b17b72a4c6752d"
+    src="https://app.thinkstack.ai/bot/thinkstackai-loader.min.js">
+</script>
+
+
+</head>
+<body>
+
+<header>
+    <h1>Faidul Islam - Contact</h1>
+</header>
+
+<main>
+    <section id="contact">
+        <h2>Contact Me</h2>
+        <p>If you would like to get in touch with me, please use the contact details below or fill out the contact form.</p>
+        <div class="contact-info">
+            <div>
+                <strong>Email:</strong> faidthegamer67@gmail.com
+            </div>
+            <div>
+                <strong>Phone:</strong> 01884-358775
+            </div>
+            <div>
+                <strong>Address:</strong> Dhaka, Bangladesh
+            </div>
+            <!-- Add more contact information as needed -->
+        </div>
+        <h3>Contact Form</h3>
+        <form class="contact-form" action="https://formsubmit.co/faidthegamer67@gmail.com" method="post">
+            <input type="text" name="name" placeholder="Your Name" required>
+            <input type="email" name="email" placeholder="Your Email" required>
+            <textarea name="message" rows="4" placeholder="Your Message" required></textarea>
+            <button type="submit">Send Message</button>
+        </form>
+    </section>
+</main>
+
+<footer>
+    <p>&copy; 2024 Faidul Islam</p>
+</footer>
+
+<div class="bubbles"></div> <!-- Bubbles container -->
+
+<script>
+    function createBubble() {
+        const bubble = document.createElement('div');
+        bubble.className = 'bubble';
+        const size = Math.random() * 30 + 10; // Bubble size
+        const positionX = Math.random() * 100; // Random horizontal position in viewport
+        const positionY = Math.random() * 100; // Random vertical position in viewport
+        const duration = Math.random() * 10 + 5; // Duration of the animation
+
+        bubble.style.width = `${size}px`;
+        bubble.style.height = `${size}px`;
+        bubble.style.left = `${positionX}vw`;
+        bubble.style.top = `${positionY}vh`; // Start bubbles from different vertical positions
+        bubble.style.animationDuration = `${duration}s`;
+        bubble.style.animationDelay = `${Math.random() * 10}s`;
+        document.querySelector('.bubbles').appendChild(bubble);
+
+        // Remove bubble after animation to prevent DOM clutter
+        bubble.addEventListener('animationend', () => {
+            bubble.remove();
+        });
+    }
+
+    // Create bubbles at intervals
+    setInterval(createBubble, 200);
+
+    document.querySelectorAll('.moving').forEach(el => {
+        el.addEventListener('mousemove', (e) => {
+            const speed = el.getAttribute('data-speed') || 1;
+            const x = (window.innerWidth - e.pageX * speed) / 100;
+            const y = (window.innerHeight - e.pageY * speed) / 100;
+            el.style.transform = `translateX(${x}px) translateY(${y}px)`;
+        });
+    });
+
+    window.addEventListener('scroll', () => {
+        document.querySelectorAll('section').forEach(section => {
+            const sectionTop = section.getBoundingClientRect().top;
+            const fadePoint = window.innerHeight / 1.2;
+            if (sectionTop < fadePoint) {
+                section.classList.add('fade-in');
+            }
+        });
+    });
+
+    document.querySelectorAll('section').forEach(section => {
+        section.style.transition = 'transform 0.5s ease-out, box-shadow 0.5s ease-out';
+    });
+</script>
+
+</body>
+</html>

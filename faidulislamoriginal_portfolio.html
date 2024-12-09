@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="logo.png">
+    <title>Faidul Islam - Portfolio</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #00c6ff, #0072ff);
+            color: #fff;
+            overflow-x: hidden;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        header {
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 1rem 0;
+            text-align: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        header nav {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        header nav a {
+            color: #fff;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            font-size: 1.1rem;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        header nav a:hover {
+            background-color: #0072ff;
+            color: #fff;
+        }
+
+        main {
+            padding: 6rem 2rem 2rem;
+            max-width: 1200px;
+            margin: auto;
+            color: #333;
+            position: relative; /* Ensure correct positioning for bubble effect */
+            z-index: 1; /* Ensure bubbles stay behind content */
+        }
+
+        section {
+            margin-bottom: 3rem;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            color: #333;
+            transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+        }
+
+        section:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        section h2 {
+            color: #004080;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        section p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #666;
+        }
+
+        .project {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 1rem;
+        }
+
+        .project img {
+            width: 150px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-right: 1rem;
+        }
+
+        .project-content {
+            max-width: 70%;
+        }
+
+        .project-title {
+            font-size: 1.5rem;
+            color: #0072ff;
+            margin: 0;
+        }
+
+        .project-description {
+            font-size: 1rem;
+            color: #666;
+        }
+
+        footer {
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            text-align: center;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 2s ease-in;
+        }
+
+        /* Keyframes for animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes textFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Bubbles Container */
+        .bubbles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        /* Bubble */
+        .bubble {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.7); /* Slightly brighter white */
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0.9; /* Increased opacity for better visibility */
+            animation: bubbleAnimation linear infinite;
+        }
+
+        /* Bubble Animation */
+        @keyframes bubbleAnimation {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 0.9;
+            }
+            100% {
+                transform: translateY(-100vh) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        /* Smooth Scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+
+<script
+    chatbot_id="66d2de19d8b17b72a4c6752d"
+    src="https://app.thinkstack.ai/bot/thinkstackai-loader.min.js">
+</script>
+
+
+</head>
+<body>
+
+<header>
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#projects">Projects</a>
+        <a href="#other-interests">Other Interests</a>
+    </nav>
+</header>
+
+<main>
+    <section id="home">
+        <h1>Welcome to My Portfolio</h1>
+        <p>Hi, I'm Faidul Islam, a passionate web developer and Minecraft enthusiast. Explore my projects and learn more about my work.</p>
+    </section>
+
+    <section id="projects">
+        <h2>Projects</h2>
+        <div class="project">
+           
+            <div class="project-content">
+                <h3 class="project-title">Faidul Islam(Testing version)</h3>
+                <p class="project-description"><a href="https://drive.google.com/drive/folders/1ErziDQy3ulB1csOdnNg6dyAmx5HVE-Dq?usp=sharing">VISIT</a></p>
+            </div>
+        </div>
+        <div class="project">
+           
+            <div class="project-content">
+                <h3 class="project-title">Project Title 2</h3>
+                <p class="project-description">A brief description of the project goes here. Highlight the main features and technologies used.</p>
+            </div>
+        </div>
+        <!-- Add more projects as needed -->
+    </section>
+
+    <section id="other-interests">
+        <h2>Other Interests</h2>
+        <p>Beyond web development and Minecraft, I have a range of interests and hobbies that keep me inspired and creative. Some of my other interests include:</p>
+        <ul>
+            <li><strong>Photography</strong> - Capturing moments and exploring new perspectives through the lens.</li>
+            <li><strong>Gaming</strong> - Enjoying various genres and discovering new gaming experiences.</li>
+            <li><strong>Travel</strong> - Exploring new places and learning about different cultures.</li>
+            <li><strong>Music</strong> - Listening to and creating music in my free time.</li>
+        </ul>
+    </section>
+</main>
+
+<footer>
+    <p>&copy; 2024 Faidul Islam</p>
+</footer>
+
+<!-- Bubble Container -->
+<div class="bubbles"></div>
+
+<script>
+    // Create bubbles
+    document.addEventListener('DOMContentLoaded', () => {
+        const bubbleContainer = document.querySelector('.bubbles');
+
+        for (let i = 0; i < 50; i++) {
+            const bubble = document.createElement('div');
+            bubble.classList.add('bubble');
+            bubble.style.width = `${Math.random() * 70 + 20}px`;
+            bubble.style.height = bubble.style.width;
+            bubble.style.left = `${Math.random() * 100}vw`;
+            bubble.style.bottom = `${Math.random() * 100}vh`;
+            bubble.style.animationDuration = `${Math.random() * 10 + 5}s`;
+            bubble.style.animationDelay = `${Math.random() * 10}s`;
+            bubbleContainer.appendChild(bubble);
+        }
+    });
+</script>
+
+</body>
+</html>

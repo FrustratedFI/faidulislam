@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="logo.png">
+    <title>Faidul Islam - About Page</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #00c6ff, #0072ff);
+            color: #fff;
+            overflow-x: hidden;
+            position: relative;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        header {
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 1rem 0;
+            text-align: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin: 0;
+            letter-spacing: 2px;
+            animation: textFadeIn 1s ease-out;
+        }
+
+        main {
+            padding: 5rem 5% 2rem;
+            max-width: 1000px;
+            margin: auto;
+            color: #333;
+            position: relative;
+            z-index: 1; /* Ensure content is above the bubbles */
+        }
+
+        section {
+            margin-bottom: 3rem;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            color: #333;
+            transition: transform 0.5s ease-out, box-shadow 0.5s ease-out;
+            position: relative;
+        }
+
+        section:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        section h2 {
+            color: #004080;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            animation: colorPulse 1.5s infinite;
+        }
+
+        section p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #666;
+        }
+
+        .bio-image {
+            float: left;
+            margin-right: 1.5rem;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 3px solid #004080;
+            object-fit: cover;
+            animation: spin 10s linear infinite;
+        }
+
+        .clear {
+            clear: both;
+        }
+
+        footer {
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            text-align: center;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 2s ease-in;
+        }
+
+        .skills, .projects {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .skills div, .projects div, .conclusion div {
+            flex: 1;
+            margin: 0.5rem;
+            opacity: 1;
+            transition: transform 0.5s ease-out, box-shadow 0.5s ease-out;
+        }
+
+        .skills div:hover, .projects div:hover, .conclusion div:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 250px;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            transform: translateX(0);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100%;
+            justify-content: center;
+        }
+
+        .sidebar ul li {
+            margin: 1rem 0;
+            opacity: 0;
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .sidebar ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.5rem;
+            padding: 1rem;
+            border-radius: 5px;
+            display: block;
+            transition: background 0.3s ease;
+            text-align: center;
+        }
+
+        .sidebar ul li a:hover {
+            background: #0072ff;
+        }
+
+        /* Bubble Animation Styles */
+        .bubbles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw; /* Ensure it covers full viewport width */
+            height: 100vh; /* Ensure it covers full viewport height */
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .bubble {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.7); /* Brighter white for bubbles */
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0.9; /* Higher opacity for visibility */
+            animation: bubbleAnimation linear infinite;
+        }
+
+        @keyframes bubbleAnimation {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 0.9;
+            }
+            100% {
+                transform: translateY(-100vh) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        /* Keyframes for animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes textFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes colorPulse {
+            0% {
+                color: #004080;
+            }
+            50% {
+                color: #003366;
+            }
+            100% {
+                color: #004080;
+            }
+        }
+
+        @keyframes elementMove {
+            0% {
+                transform: translateX(0) translateY(0);
+            }
+            50% {
+                transform: translateX(-10px) translateY(10px);
+            }
+            100% {
+                transform: translateX(0) translateY(0);
+            }
+        }
+    </style>
+
+<script
+    chatbot_id="66d2de19d8b17b72a4c6752d"
+    src="https://app.thinkstack.ai/bot/thinkstackai-loader.min.js">
+</script>
+
+
+</head>
+<body>
+
+<header>
+    <h1>Faidul Islam - About</h1>
+</header>
+
+<main>
+    <section id="about-me" class="moving">
+        <h2>About Me</h2>
+        <img src="./my_pic.jpeg" alt="Faidul Islam" class="bio-image">
+        <p>Hi, I'm Faidul Islam, a student at GPH Internationals. I have a passion for learning and exploring new things, especially in the world of technology. I'm currently learning HTML and enjoy creating content for my YouTube channel, where I record Minecraft gameplay. I love problem-solving and always strive to improve my skills and knowledge.</p>
+        <div class="clear"></div>
+    </section>
+
+    <section id="skills" class="moving">
+        <h2>Skills</h2>
+        <div class="skills">
+            <div class="moving">
+                <h3>Technical Skills</h3>
+                <ul>
+                    <li>HTML</li>
+                    <li>CSS</li>
+                    <li>Minecraft Server Management</li>
+                </ul>
+            </div>
+            <div class="moving">
+                <h3>Personal Skills</h3>
+                <ul>
+                    <li>Problem-Solving</li>
+                    <li>Content Creation</li>
+                    <li>Teamwork</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="moving">
+        <h2>Projects</h2>
+        <div class="projects">
+            <div class="moving">
+                <h3>Minecraft Server Optimization</h3>
+                <p>I manage a Minecraft server and constantly work on optimizing its performance to ensure smooth gameplay for all users.</p>
+            </div>
+            <div class="moving">
+                <h3>YouTube Channel</h3>
+                <p>I create content for my YouTube channel, focusing on Minecraft gameplay, updates, and cool features. My channel highlights interesting aspects of the game and shares tips with viewers.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="conclusion" class="moving">
+        <h2>Conclusion</h2>
+        <p>Through my experiences with HTML, content creation, and Minecraft server management, I’ve developed a deep understanding of technology and problem-solving. I continue to explore new opportunities and strive to enhance my skills, always eager to learn and grow. Thank you for visiting my page, and I hope to connect with you through my work and projects.</p>
+    </section>
+</main>
+
+<footer>
+    <p>&copy; 2024 Faidul Islam</p>
+</footer>
+
+<div class="bubbles"></div> <!-- Bubbles container -->
+
+<script>
+    function createBubble() {
+        const bubble = document.createElement('div');
+        bubble.className = 'bubble';
+        const size = Math.random() * 30 + 10; // Bubble size
+        const positionX = Math.random() * 100; // Random horizontal position in viewport
+        const positionY = Math.random() * 100; // Random vertical position in viewport
+        const duration = Math.random() * 10 + 5; // Duration of the animation
+
+        bubble.style.width = `${size}px`;
+        bubble.style.height = `${size}px`;
+        bubble.style.left = `${positionX}vw`;
+        bubble.style.top = `${positionY}vh`; // Start bubbles from different vertical positions
+        bubble.style.animationDuration = `${duration}s`;
+        bubble.style.animationDelay = `${Math.random() * 10}s`;
+        document.querySelector('.bubbles').appendChild(bubble);
+
+        // Remove bubble after animation to prevent DOM clutter
+        bubble.addEventListener('animationend', () => {
+            bubble.remove();
+        });
+    }
+
+    // Create bubbles at intervals
+    setInterval(createBubble, 200);
+
+    document.querySelectorAll('.moving').forEach(el => {
+        el.addEventListener('mousemove', (e) => {
+            const speed = el.getAttribute('data-speed') || 1;
+            const x = (window.innerWidth - e.pageX * speed) / 100;
+            const y = (window.innerHeight - e.pageY * speed) / 100;
+            el.style.transform = `translateX(${x}px) translateY(${y}px)`;
+        });
+    });
+
+    window.addEventListener('scroll', () => {
+        document.querySelectorAll('section').forEach(section => {
+            const sectionTop = section.getBoundingClientRect().top;
+            const fadePoint = window.innerHeight / 1.2;
+            if (sectionTop < fadePoint) {
+                section.classList.add('fade-in');
+            }
+        });
+    });
+
+    document.querySelectorAll('section').forEach(section => {
+        section.style.transition = 'transform 0.5s ease-out, box-shadow 0.5s ease-out';
+    });
+</script>
+
+</body>
+</html>
