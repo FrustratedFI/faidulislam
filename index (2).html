@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Faidul Islam — Creative Developer &amp; Robotics/AI Innovator</title>
+<meta name="description" content="Faidul Islam — Creative Developer, Full-Stack Engineer, Robotics & AI Innovator." />
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          void: '#070a12',
+          panel: '#0f1524',
+          ion: '#4fd8ff',
+          violet: '#9b7bff',
+          ink: '#eef2fa',
+          muted: '#8a93ab',
+        },
+        fontFamily: {
+          display: ['"Space Grotesk"', 'sans-serif'],
+          body: ['"Inter"', 'sans-serif'],
+          mono: ['"JetBrains Mono"', 'monospace'],
+        },
+      },
+    },
+  };
+</script>
+
+<style>
+  :root{
+    --void:#070a12;
+    --panel:#0f1524;
+    --ion:#4fd8ff;
+    --violet:#9b7bff;
+    --ink:#eef2fa;
+    --muted:#8a93ab;
+    --line: rgba(255,255,255,0.08);
+  }
+
+  *{ box-sizing: border-box; }
+
+  html{ scroll-behavior: smooth; }
+
+  body{
+    background: var(--void);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  @media (hover: none), (pointer: coarse){
+    body{ cursor: auto; }
+    #cursor-dot, #cursor-ring{ display:none !important; }
+  }
+
+  ::selection{ background: rgba(79,216,255,0.25); color:#fff; }
+
+  /* ---------- Scrollbar ---------- */
+  ::-webkit-scrollbar{ width:8px; }
+  ::-webkit-scrollbar-track{ background: var(--void); }
+  ::-webkit-scrollbar-thumb{ background: linear-gradient(var(--ion), var(--violet)); border-radius: 8px; }
+
+  /* ---------- Custom cursor ---------- */
+  #cursor-dot, #cursor-ring{
+    position: fixed;
+    top:0; left:0;
+    pointer-events:none;
+    z-index: 9999;
+    border-radius: 50%;
+    transform: translate(-50%,-50%);
+    will-change: transform;
+  }
+  #cursor-dot{
+    width:6px; height:6px;
+    background: var(--ion);
+    box-shadow: 0 0 10px 2px rgba(79,216,255,0.9);
+    transition: opacity .2s ease;
+  }
+  #cursor-ring{
+    width:34px; height:34px;
+    border: 1px solid rgba(79,216,255,0.55);
+    transition: width .25s ease, height .25s ease, border-color .25s ease, background .25s ease;
+  }
+  #cursor-ring.magnet{
+    width:64px; height:64px;
+    border-color: rgba(155,123,255,0.85);
+    background: rgba(155,123,255,0.08);
+  }
+
+  /* ---------- Backgrounds ---------- */
+  #three-canvas{
+    position: fixed;
+    inset:0;
+    z-index:0;
+    display:block;
+  }
+
+  .scene-fade{
+    position: fixed;
+    inset:0;
+    z-index:1;
+    pointer-events:none;
+    background: linear-gradient(to bottom,
+      rgba(7,10,18,0) 0,
+      rgba(7,10,18,0) 55vh,
+      rgba(7,10,18,0.55) 78vh,
+      rgba(7,10,18,0.94) 96vh,
+      var(--void) 100vh);
+  }
+
+  .noise-overlay{
+    position: fixed;
+    inset:0;
+    z-index:1;
+    pointer-events:none;
+    background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.035) 1px, transparent 0);
+    background-size: 3px 3px;
+    mix-blend-mode: overlay;
+  }
+
+  .grid-floor{
+    position:absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(79,216,255,0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(79,216,255,0.08) 1px, transparent 1px);
+    background-size: 46px 46px;
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, black 30%, transparent 75%);
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, black 30%, transparent 75%);
+  }
+
+  /* ---------- Glass panels ---------- */
+  .glass{
+    background: linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.015));
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid var(--line);
+    position: relative;
+  }
+  .glass::before{
+    content:'';
+    position:absolute; inset:0;
+    border-radius: inherit;
+    padding:1px;
+    background: linear-gradient(135deg, rgba(79,216,255,0.35), rgba(155,123,255,0.05) 40%, rgba(79,216,255,0.02) 60%, rgba(155,123,255,0.3));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events:none;
+    opacity: 0.7;
+  }
+
+  /* ---------- Nav ---------- */
+  .nav-link{
+    position: relative;
+    color: var(--muted);
+    transition: color .25s ease;
+  }
+  .nav-link::after{
+    content:'';
+    position:absolute; left:0; bottom:-4px;
+    width:0%; height:1px;
+    background: linear-gradient(90deg, var(--ion), var(--violet));
+    transition: width .3s ease;
+  }
+  .nav-link:hover{ color: var(--ink); }
+  .nav-link:hover::after{ width:100%; }
+
+  /* ---------- Hero type ---------- */
+  .type-line::after{
+    content:'';
+    display:inline-block;
+    width: 2px;
+    height: 1em;
+    background: var(--ion);
+    margin-left: 4px;
+    vertical-align: -0.15em;
+    animation: blink 1s steps(1) infinite;
+    box-shadow: 0 0 8px rgba(79,216,255,0.9);
+  }
+  @keyframes blink{ 50%{ opacity:0; } }
+
+  .hero-name{
+    letter-spacing: -0.02em;
+    background: linear-gradient(180deg, #ffffff 10%, #b9c4dd 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .parallax-el{ will-change: transform; transition: transform .15s ease-out; }
+
+  /* ---------- Project cards ---------- */
+  .tilt-card{
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    transition: transform .12s ease, box-shadow .3s ease;
+  }
+  .tilt-inner{
+    transform-style: preserve-3d;
+  }
+  .tilt-card .tilt-glow{
+    position:absolute; inset:-1px;
+    border-radius: inherit;
+    opacity:0;
+    transition: opacity .35s ease;
+    background: radial-gradient(400px circle at var(--mx,50%) var(--my,50%), rgba(79,216,255,0.18), transparent 60%);
+    pointer-events:none;
+  }
+  .tilt-card:hover .tilt-glow{ opacity:1; }
+  .tilt-card{
+    box-shadow:
+      0 1px 1px rgba(0,0,0,0.5),
+      0 8px 20px -8px rgba(0,0,0,0.6),
+      0 30px 60px -30px rgba(79,216,255,0.15);
+  }
+  .tilt-card:hover{
+    box-shadow:
+      0 1px 1px rgba(0,0,0,0.5),
+      0 20px 40px -12px rgba(0,0,0,0.7),
+      0 40px 90px -20px rgba(79,216,255,0.35),
+      0 10px 60px -15px rgba(155,123,255,0.25);
+  }
+  .card-media{ transform: translateZ(40px); }
+  .card-tag{ transform: translateZ(20px); }
+
+  /* ---------- Pure-CSS 3D cube ---------- */
+  .cube-wrap{
+    perspective: 700px;
+    width: 68px; height: 68px;
+  }
+  .cube{
+    width: 68px; height: 68px;
+    position: relative;
+    transform-style: preserve-3d;
+    animation: spin3d 14s linear infinite;
+  }
+  .tilt-card:hover .cube{ animation-play-state: paused; }
+  .cube .face{
+    position: absolute;
+    width: 68px; height: 68px;
+    display:flex; align-items:center; justify-content:center;
+    font-size: 26px;
+    background: linear-gradient(135deg, rgba(79,216,255,0.22), rgba(155,123,255,0.12));
+    border: 1px solid rgba(79,216,255,0.35);
+    box-shadow: inset 0 0 20px rgba(79,216,255,0.08);
+  }
+  .cube .f-front{ transform: translateZ(34px); }
+  .cube .f-back{ transform: translateZ(-34px) rotateY(180deg); }
+  .cube .f-right{ transform: rotateY(90deg) translateZ(34px); }
+  .cube .f-left{ transform: rotateY(-90deg) translateZ(34px); }
+  .cube .f-top{ transform: rotateX(90deg) translateZ(34px); }
+  .cube .f-bottom{ transform: rotateX(-90deg) translateZ(34px); }
+  @keyframes spin3d{
+    from{ transform: rotateX(0deg) rotateY(0deg); }
+    to{ transform: rotateX(360deg) rotateY(360deg); }
+  }
+
+  /* ---------- Hex skills ---------- */
+  .hex{
+    position: relative;
+    width: 108px;
+    aspect-ratio: 0.87;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    background: linear-gradient(160deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
+    border: 1px solid var(--line);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:6px;
+    transition: transform .35s ease, background .35s ease;
+  }
+  .hex:hover{
+    transform: translateY(-6px) scale(1.04);
+    background: linear-gradient(160deg, rgba(79,216,255,0.12), rgba(155,123,255,0.06));
+  }
+  .hex-fill{
+    position:absolute; inset:0;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    background: conic-gradient(var(--ion) calc(var(--pct,0) * 1%), transparent 0);
+    opacity: 0.16;
+    transition: --pct 1.4s ease;
+  }
+
+  .fade-up{
+    opacity:0;
+    transform: translateY(28px);
+    transition: opacity .8s ease, transform .8s ease;
+  }
+  .fade-up.in{ opacity:1; transform: translateY(0); }
+
+  .eyebrow{
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.18em;
+    color: var(--ion);
+  }
+
+  .btn-primary{
+    background: linear-gradient(120deg, var(--ion), var(--violet));
+    color:#050810;
+    font-weight:600;
+    transition: transform .25s ease, box-shadow .25s ease;
+    box-shadow: 0 10px 30px -10px rgba(79,216,255,0.5);
+  }
+  .btn-primary:hover{ transform: translateY(-2px); box-shadow: 0 16px 40px -12px rgba(79,216,255,0.7); }
+
+  .social-orb{
+    width:46px; height:46px;
+    display:flex; align-items:center; justify-content:center;
+    border-radius:9999px;
+    transition: transform .3s ease, border-color .3s ease, background .3s ease;
+  }
+  .social-orb:hover{ transform: translateY(-4px); background: rgba(79,216,255,0.1); border-color: rgba(79,216,255,0.5); }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
+  }
+</style>
+</head>
+
+<body class="antialiased">
+
+  <!-- Custom cursor -->
+  <div id="cursor-dot"></div>
+  <div id="cursor-ring"></div>
+
+  <!-- Background layers -->
+  <canvas id="three-canvas"></canvas>
+  <div class="scene-fade"></div>
+  <div class="noise-overlay"></div>
+
+  <!-- ============ NAV ============ -->
+  <header class="fixed top-0 inset-x-0 z-50">
+    <nav class="max-w-6xl mx-auto flex items-center justify-between px-6 md:px-10 py-5">
+      <a href="#top" class="font-display font-semibold tracking-tight text-lg">
+        F<span class="text-ion">.</span>Islam
+      </a>
+      <div class="hidden md:flex items-center gap-8 font-mono text-sm">
+        <a href="#work" class="nav-link">work</a>
+        <a href="#about" class="nav-link">about</a>
+        <a href="#arsenal" class="nav-link">arsenal</a>
+        <a href="#contact" class="nav-link">contact</a>
+      </div>
+      <a href="mailto:faidthegamer67@gmail.com" class="hidden md:inline-flex px-4 py-2 rounded-full glass text-xs font-mono nav-link !text-ink">
+        say hello
+      </a>
+      <button id="menu-btn" aria-label="Open menu" class="md:hidden w-9 h-9 flex flex-col justify-center gap-1.5 items-end">
+        <span class="block h-px w-6 bg-ink"></span>
+        <span class="block h-px w-4 bg-ink"></span>
+      </button>
+    </nav>
+    <div id="mobile-menu" class="hidden md:hidden glass mx-4 mt-1 rounded-2xl px-6 py-4 flex flex-col gap-4 font-mono text-sm">
+      <a href="#work" class="nav-link">work</a>
+      <a href="#about" class="nav-link">about</a>
+      <a href="#arsenal" class="nav-link">arsenal</a>
+      <a href="#contact" class="nav-link">contact</a>
+    </div>
+  </header>
+
+  <!-- ============ HERO ============ -->
+  <section id="top" class="relative z-10 min-h-[100svh] flex items-center px-6 md:px-10 pt-28 pb-16">
+    <div class="grid-floor absolute inset-0"></div>
+
+    <div class="max-w-6xl mx-auto w-full grid md:grid-cols-[1.4fr_1fr] gap-12 items-center">
+      <div id="hero-parallax-1" class="parallax-el">
+        <p class="eyebrow text-xs mb-5">/// creative developer — robotics &amp; ai innovator</p>
+        <h1 class="hero-name font-display font-semibold text-5xl sm:text-6xl lg:text-7xl leading-[0.95]">
+          Faidul<br/>Islam
+        </h1>
+        <p class="font-mono text-ion text-lg md:text-xl mt-6">
+          <span id="type-target">&gt; </span><span class="type-line"></span>
+        </p>
+        <p class="text-muted max-w-md mt-6 leading-relaxed">
+          Passionate about building things that live on the internet — and things that live in the physical world too. I design interactive, accessible, performant experiences, and I build robots that think.
+        </p>
+
+        <div class="flex flex-wrap items-center gap-4 mt-9">
+          <a href="#work" class="btn-primary px-6 py-3 rounded-full text-sm">View Selected Work</a>
+          <a href="#contact" class="px-6 py-3 rounded-full glass text-sm nav-link !text-ink">Get in touch</a>
+        </div>
+
+        <div class="flex items-center gap-4 mt-10">
+          <a href="#" class="social-orb glass" aria-label="GitHub">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.5 0-.24-.01-1.04-.01-1.88-2.78.62-3.37-1.22-3.37-1.22-.46-1.2-1.11-1.52-1.11-1.52-.91-.64.07-.63.07-.63 1 .07 1.53 1.05 1.53 1.05.9 1.57 2.34 1.12 2.91.86.09-.66.35-1.12.64-1.38-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.31.1-2.73 0 0 .84-.28 2.75 1.05a9.3 9.3 0 0 1 5 0c1.9-1.33 2.75-1.05 2.75-1.05.55 1.42.2 2.47.1 2.73.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.79-4.57 5.05.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.81 0 .28.18.61.69.5A10.26 10.26 0 0 0 22 12.25C22 6.58 17.52 2 12 2Z" fill="currentColor"/></svg>
+          </a>
+          <a href="#" class="social-orb glass" aria-label="LinkedIn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5.001 2.5 2.5 0 0 1 0-5.001ZM3 9h4v12H3V9Zm7 0h3.8v1.64h.05c.53-1 1.83-2.06 3.77-2.06 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.5c0-1.31-.02-3-1.83-3-1.83 0-2.11 1.43-2.11 2.9V21h-4V9Z" fill="currentColor"/></svg>
+          </a>
+          <a href="#" class="social-orb glass" aria-label="Twitter">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M22 5.9c-.7.3-1.5.55-2.3.65a4 4 0 0 0 1.75-2.2 8 8 0 0 1-2.53.97 4 4 0 0 0-6.8 3.64A11.3 11.3 0 0 1 3.9 4.6a4 4 0 0 0 1.24 5.34c-.65-.02-1.26-.2-1.8-.5v.05a4 4 0 0 0 3.2 3.92c-.58.16-1.2.18-1.83.07a4 4 0 0 0 3.73 2.78A8.05 8.05 0 0 1 2 18.4a11.3 11.3 0 0 0 6.14 1.8c7.36 0 11.4-6.1 11.4-11.4l-.01-.52A8.2 8.2 0 0 0 22 5.9Z" fill="currentColor"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div id="hero-parallax-2" class="parallax-el relative hidden md:block h-[420px]">
+        <div class="glass rounded-3xl absolute top-0 right-0 w-64 p-5 rotate-3">
+          <p class="eyebrow text-[10px] mb-2">system.log</p>
+          <p class="font-mono text-xs text-muted leading-relaxed">
+            &gt; init robot_core.py<br/>
+            &gt; sensors: online<br/>
+            &gt; motors: calibrated<br/>
+            &gt; ai_model: loaded<br/>
+            <span class="text-ion">&gt; status: ready_</span>
+          </p>
+        </div>
+        <div class="glass rounded-3xl absolute bottom-10 left-0 w-52 p-5 -rotate-6">
+          <p class="eyebrow text-[10px] mb-2">uptime</p>
+          <p class="font-display text-3xl" id="uptime-counter">00:00:00</p>
+          <p class="text-muted text-xs mt-1">building, always.</p>
+        </div>
+        <div class="glass rounded-2xl absolute bottom-0 right-10 w-40 h-40 flex items-center justify-center rotate-12">
+          <div class="cube-wrap">
+            <div class="cube" style="animation-duration:9s;">
+              <div class="face f-front font-display font-semibold" style="color:var(--ion);">F</div>
+              <div class="face f-back font-display font-semibold" style="color:var(--violet);">F</div>
+              <div class="face f-right"></div>
+              <div class="face f-left"></div>
+              <div class="face f-top"></div>
+              <div class="face f-bottom"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <a href="#work" class="hidden md:flex flex-col items-center gap-2 absolute bottom-8 left-1/2 -translate-x-1/2 text-muted font-mono text-[10px] tracking-widest">
+      SCROLL
+      <span class="w-px h-8 bg-gradient-to-b from-ion to-transparent"></span>
+    </a>
+  </section>
+
+  <!-- ============ WORK ============ -->
+  <section id="work" class="relative z-10 max-w-6xl mx-auto px-6 md:px-10 py-28">
+    <div class="fade-up mb-14">
+      <p class="eyebrow text-xs mb-3">/// selected work</p>
+      <h2 class="font-display text-4xl md:text-5xl font-semibold">Things I've shipped &amp; built</h2>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6" id="project-grid">
+
+      <!-- Project 1 -->
+      <article class="tilt-card glass rounded-3xl p-6 flex flex-col fade-up" data-tilt>
+        <div class="tilt-inner flex flex-col flex-1">
+          <div class="tilt-glow"></div>
+          <div class="card-media rounded-2xl h-40 mb-6 flex items-center justify-center relative overflow-hidden" style="background: radial-gradient(circle at 30% 20%, rgba(79,216,255,0.35), transparent 60%), #0b111f;">
+            <div class="cube-wrap">
+              <div class="cube">
+                <div class="face f-front">🌐</div>
+                <div class="face f-back">🌐</div>
+                <div class="face f-right"></div>
+                <div class="face f-left"></div>
+                <div class="face f-top"></div>
+                <div class="face f-bottom"></div>
+              </div>
+            </div>
+          </div>
+          <span class="card-tag eyebrow text-[10px] mb-2">web-based / webgl</span>
+          <h3 class="card-tag font-display text-xl font-semibold mb-2">MetaVerse Hub</h3>
+          <p class="card-tag text-muted text-sm leading-relaxed flex-1">A social 3D-web platform for exploring shared virtual spaces, built on real-time WebGL rendering and on-chain identity.</p>
+          <div class="card-tag flex flex-wrap gap-2 mt-5">
+            <span class="font-mono text-[11px] px-2.5 py-1 rounded-full border border-ion/30 text-ion/90">Three.js</span>
+            <span class="font-mono text-[11px] px-2.5 py-1 rounded-full border border-ion/30 text-ion/90">WebGL</span>
+            <span class="font-mono text-[11px] px-2.5 py-1 rounded-full border border-ion/30 text-ion/90">Web3</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Project 2 -->
+      <article class="tilt-card glass rounded-3xl p-6 flex flex-col fade-up" data-tilt style="transition-delay:.08s">
+        <div class="tilt-inner flex flex-col flex-1">
+          <div class="tilt-glow"></div>
+          <div class="card-media rounded-2xl h-40 mb-6 flex items-center justify-center relative overflow-hidden" style="background: radial-gradient(circle at 70% 30%, rgba(155,123,255,0.35), transparent 60%), #0b111f;">
+            <div class="cube-wrap">
+              <div class="cube" style="animation-duration:11s;">
+                <div class="face f-front">🧠</div>
+                <div class="face f-back">🧠</div>
+                <div class="face f-right"></div>
+                <div class="face f-left"></div>
+                <div class="face f-top"></div>
+                <div class="face f-bottom"></div>
+              </div>
+            </div>
+          </div>
+          <span class="card-tag eyebrow text-[10px] mb-2">python software</span>
+          <h3 class="card-tag font-display text-xl font-semibold mb-2">AI Assistant Pro</h3>
+          <p class="card-tag text-muted text-sm leading-relaxed flex-1">A production-grade conversational assistant with a FastAPI backend, streaming responses, and a React front end built for speed.</p>
+          <div class="card-tag flex flex-wrap gap-2 mt-5">
+            <span class="font-mono text-[11px] px-2.5 py-1 rounded-full border border-violet/30 text-violet/90">OpenAI</span>
+            <span class="font-mono text-[11px] px-2.5 py-1 rounded-full border border-violet/30 text-violet/90">React</span>
+            <span class="font-mono text-[11px] px-2.5 py-1 rounded-full border border-violet/30 text-violet/90">FastAPI</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Project 3 -->
+      <article class="tilt-card glass rounded-3xl p-6 flex flex-col fade-up" data-tilt style="transition-delay:.16s">
+        <div class="tilt-inner flex flex-col flex-1">
+          <div class="tilt-glow"></div>
+          <div class="card-media rounded-2xl h-40 mb-6 flex items-center justify-center relative overflow-hidden" style="background: radial-gradient(circle at 40% 70%, rgba(79,216,255,0.3), transparent 60%), #0b111f;">
+            <div class="cube-wrap">
+              <div class="cube" style="animation-duration:16s;">
+                <div class="face f-front">🤖</div>
+                <div class="face f-back">🤖</div>
+                <div class="face f-right"></div>
+                <div class="face f-left"></div>
+                <div class="face f-top"></div>
+                <div class="face f-bottom"></div>
+              </div>
+            </div>
+          </div>
+          <span class="card-tag eyebrow text-[10px] mb-2">arduino / physical ai</span>
+          <h3 class="card-tag font-display text-xl font-semibold mb-2">Robobuddy</h3>
+          <p class="card-tag text-muted text-sm leading-relaxed flex-1">A desk companion robot with on-device AI, obstacle-aware movement, and a personality — built from raw firmware up.</p>
+          <div class="card-tag flex flex-wrap gap-2 mt-5">
+            <span class="font-mono text-[11px] px-2.5 py-1 rounded-full border border-ion/30 text-ion/90">C++</span>
+            <span class="font-mono text-[11px] px-2.5 py-1 rounded-full border border-ion/30 text-ion/90">Python</span>
+            <span class="font-mono text-[11px] px-2.5 py-1 rounded-full border border-ion/30 text-ion/90">AI</span>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ============ ABOUT ============ -->
+  <section id="about" class="relative z-10 max-w-6xl mx-auto px-6 md:px-10 py-28 grid md:grid-cols-2 gap-16 items-center">
+    <div class="fade-up">
+      <p class="eyebrow text-xs mb-3">/// about</p>
+      <h2 class="font-display text-4xl md:text-5xl font-semibold mb-6">Half compiler,<br/>half solder iron.</h2>
+      <p class="text-muted leading-relaxed mb-4">
+        I'm Faidul — a creative developer and full-stack engineer who's just as comfortable inside a browser's render tree as inside a robot's control loop. I care about building things that live on the internet, and things that live on a desk, blinking back at you.
+      </p>
+      <p class="text-muted leading-relaxed">
+        My work sits at the intersection of interactive web experiences, applied AI, and hands-on robotics — always aimed at feeling accessible, performant, and a little bit alive.
+      </p>
+      <div class="grid grid-cols-3 gap-4 mt-10">
+        <div class="glass rounded-2xl p-4 text-center">
+          <p class="font-display text-2xl text-ion">3+</p>
+          <p class="text-muted text-xs mt-1 font-mono">yrs building</p>
+        </div>
+        <div class="glass rounded-2xl p-4 text-center">
+          <p class="font-display text-2xl text-ion">10+</p>
+          <p class="text-muted text-xs mt-1 font-mono">projects shipped</p>
+        </div>
+        <div class="glass rounded-2xl p-4 text-center">
+          <p class="font-display text-2xl text-ion">1</p>
+          <p class="text-muted text-xs mt-1 font-mono">robot desk buddy</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="fade-up glass rounded-3xl p-8 font-mono text-sm leading-relaxed" style="transition-delay:.1s">
+      <div class="flex gap-1.5 mb-5">
+        <span class="w-3 h-3 rounded-full bg-red-400/70"></span>
+        <span class="w-3 h-3 rounded-full bg-yellow-400/70"></span>
+        <span class="w-3 h-3 rounded-full bg-green-400/70"></span>
+      </div>
+      <p class="text-muted"><span class="text-violet">const</span> <span class="text-ion">faidul</span> = {</p>
+      <p class="pl-4">role: <span class="text-ion">"Creative Developer"</span>,</p>
+      <p class="pl-4">focus: [<span class="text-ion">"Full-Stack"</span>, <span class="text-ion">"Robotics"</span>, <span class="text-ion">"AI"</span>],</p>
+      <p class="pl-4">believes: <span class="text-ion">"good UX is invisible"</span>,</p>
+      <p class="pl-4">currently: <span class="text-ion">"teaching a robot manners"</span></p>
+      <p>};</p>
+    </div>
+  </section>
+
+  <!-- ============ ARSENAL ============ -->
+  <section id="arsenal" class="relative z-10 max-w-6xl mx-auto px-6 md:px-10 py-28">
+    <div class="fade-up mb-16">
+      <p class="eyebrow text-xs mb-3">/// tech arsenal</p>
+      <h2 class="font-display text-4xl md:text-5xl font-semibold">Tools of the trade</h2>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-10" id="arsenal-grid">
+      <div class="fade-up">
+        <p class="font-mono text-xs text-muted mb-5 tracking-widest">FRONTEND</p>
+        <div class="flex flex-wrap gap-3">
+          <div class="hex" data-pct="95"><div class="hex-fill"></div><span class="font-mono text-xs relative">React</span><span class="font-mono text-[10px] text-ion relative">95%</span></div>
+          <div class="hex" data-pct="90"><div class="hex-fill"></div><span class="font-mono text-xs relative">TS</span><span class="font-mono text-[10px] text-ion relative">90%</span></div>
+          <div class="hex" data-pct="92"><div class="hex-fill"></div><span class="font-mono text-xs relative">Tailwind</span><span class="font-mono text-[10px] text-ion relative">92%</span></div>
+        </div>
+      </div>
+      <div class="fade-up" style="transition-delay:.08s">
+        <p class="font-mono text-xs text-muted mb-5 tracking-widest">BACKEND</p>
+        <div class="flex flex-wrap gap-3">
+          <div class="hex" data-pct="88"><div class="hex-fill"></div><span class="font-mono text-xs relative">FastAPI</span><span class="font-mono text-[10px] text-ion relative">88%</span></div>
+          <div class="hex" data-pct="85"><div class="hex-fill"></div><span class="font-mono text-xs relative">Node</span><span class="font-mono text-[10px] text-ion relative">85%</span></div>
+          <div class="hex" data-pct="80"><div class="hex-fill"></div><span class="font-mono text-xs relative">Postgres</span><span class="font-mono text-[10px] text-ion relative">80%</span></div>
+        </div>
+      </div>
+      <div class="fade-up" style="transition-delay:.16s">
+        <p class="font-mono text-xs text-muted mb-5 tracking-widest">DEVOPS</p>
+        <div class="flex flex-wrap gap-3">
+          <div class="hex" data-pct="82"><div class="hex-fill"></div><span class="font-mono text-xs relative">Docker</span><span class="font-mono text-[10px] text-ion relative">82%</span></div>
+          <div class="hex" data-pct="75"><div class="hex-fill"></div><span class="font-mono text-xs relative">CI/CD</span><span class="font-mono text-[10px] text-ion relative">75%</span></div>
+          <div class="hex" data-pct="70"><div class="hex-fill"></div><span class="font-mono text-xs relative">AWS</span><span class="font-mono text-[10px] text-ion relative">70%</span></div>
+        </div>
+      </div>
+      <div class="fade-up" style="transition-delay:.24s">
+        <p class="font-mono text-xs text-muted mb-5 tracking-widest">AI / ML &amp; ROBOTICS</p>
+        <div class="flex flex-wrap gap-3">
+          <div class="hex" data-pct="90"><div class="hex-fill"></div><span class="font-mono text-xs relative">OpenAI API</span><span class="font-mono text-[10px] text-ion relative">90%</span></div>
+          <div class="hex" data-pct="86"><div class="hex-fill"></div><span class="font-mono text-xs relative">C++/Arduino</span><span class="font-mono text-[10px] text-ion relative">86%</span></div>
+          <div class="hex" data-pct="78"><div class="hex-fill"></div><span class="font-mono text-xs relative">Python AI</span><span class="font-mono text-[10px] text-ion relative">78%</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section id="contact" class="relative z-10 max-w-4xl mx-auto px-6 md:px-10 py-28 text-center">
+    <div class="fade-up glass rounded-[2.5rem] px-8 py-16 md:px-16 relative overflow-hidden">
+      <div class="absolute -top-20 -right-20 w-64 h-64 rounded-full opacity-30" style="background: radial-gradient(circle, var(--violet), transparent 70%);"></div>
+      <div class="absolute -bottom-20 -left-20 w-64 h-64 rounded-full opacity-30" style="background: radial-gradient(circle, var(--ion), transparent 70%);"></div>
+
+      <p class="eyebrow text-xs mb-4 relative">/// let's build something</p>
+      <h2 class="font-display text-4xl md:text-5xl font-semibold mb-6 relative">Got an idea worth<br/>bringing to life?</h2>
+      <p class="text-muted max-w-md mx-auto mb-10 relative">Whether it's a web experience, an AI product, or a robot that needs a brain — I'd love to hear about it.</p>
+      <a href="mailto:faidthegamer67@gmail.com" class="btn-primary inline-flex px-8 py-4 rounded-full text-sm relative font-mono">
+        faidthegamer67@gmail.com
+      </a>
+    </div>
+  </section>
+
+  <footer class="relative z-10 max-w-6xl mx-auto px-6 md:px-10 py-10 flex flex-col sm:flex-row items-center justify-between gap-4 text-muted text-xs font-mono">
+    <p>© <span id="year"></span> Faidul Islam. All rights reserved.</p>
+    <p>Built with obsession, one glowing pixel at a time.</p>
+  </footer>
+
+<script>
+  // ===================== YEAR =====================
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // ===================== LIVE UPTIME COUNTER =====================
+  // Counts up from the moment this page loaded, HH:MM:SS, ticking every second.
+  const uptimeEl = document.getElementById('uptime-counter');
+  const pageLoadTime = Date.now();
+  function pad(n){ return String(n).padStart(2, '0'); }
+  function updateUptime(){
+    const elapsed = Math.floor((Date.now() - pageLoadTime) / 1000);
+    const hrs = Math.floor(elapsed / 3600);
+    const mins = Math.floor((elapsed % 3600) / 60);
+    const secs = elapsed % 60;
+    uptimeEl.textContent = `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
+  }
+  updateUptime();
+  setInterval(updateUptime, 1000);
+
+  // ===================== MOBILE MENU =====================
+  const menuBtn = document.getElementById('menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+  menuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+  mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mobileMenu.classList.add('hidden')));
+
+  // ===================== CUSTOM CURSOR =====================
+  const hasHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const dot = document.getElementById('cursor-dot');
+  const ring = document.getElementById('cursor-ring');
+
+  if (hasHover) {
+    let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+    let ringX = mouseX, ringY = mouseY;
+
+    window.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX; mouseY = e.clientY;
+      dot.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%,-50%)`;
+    });
+
+    function animateRing(){
+      ringX += (mouseX - ringX) * 0.16;
+      ringY += (mouseY - ringY) * 0.16;
+      ring.style.transform = `translate(${ringX}px, ${ringY}px) translate(-50%,-50%)`;
+      requestAnimationFrame(animateRing);
+    }
+    animateRing();
+
+    const magnetTargets = document.querySelectorAll('a, button, .tilt-card, .hex, input, textarea');
+    magnetTargets.forEach(el => {
+      el.addEventListener('mouseenter', () => { ring.classList.add('magnet'); dot.style.opacity = '0'; });
+      el.addEventListener('mouseleave', () => { ring.classList.remove('magnet'); dot.style.opacity = '1'; });
+    });
+  }
+
+  // ===================== TYPING ANIMATION =====================
+  const roles = ['Creative Developer', 'Full-Stack Engineer', 'Robotics & AI Innovator'];
+  const typeEl = document.querySelector('.type-line');
+  let roleIdx = 0, charIdx = 0, deleting = false;
+
+  function tick(){
+    const current = roles[roleIdx];
+    if (!deleting) {
+      charIdx++;
+      typeEl.textContent = current.slice(0, charIdx);
+      if (charIdx === current.length) {
+        deleting = true;
+        setTimeout(tick, 1600);
+        return;
+      }
+    } else {
+      charIdx--;
+      typeEl.textContent = current.slice(0, charIdx);
+      if (charIdx === 0) {
+        deleting = false;
+        roleIdx = (roleIdx + 1) % roles.length;
+      }
+    }
+    setTimeout(tick, deleting ? 45 : 85);
+  }
+  tick();
+
+  // ===================== SCROLL REVEAL =====================
+  const revealEls = document.querySelectorAll('.fade-up');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => io.observe(el));
+
+  // ===================== HEX FILL ANIMATION =====================
+  const hexes = document.querySelectorAll('.hex');
+  const hexIo = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const pct = entry.target.getAttribute('data-pct') || 0;
+        entry.target.style.setProperty('--pct', pct);
+        hexIo.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.3 });
+  hexes.forEach(h => hexIo.observe(h));
+
+  // ===================== HERO PARALLAX =====================
+  const p1 = document.getElementById('hero-parallax-1');
+  const p2 = document.getElementById('hero-parallax-2');
+  if (hasHover) {
+    window.addEventListener('mousemove', (e) => {
+      const nx = (e.clientX / window.innerWidth) - 0.5;
+      const ny = (e.clientY / window.innerHeight) - 0.5;
+      p1.style.transform = `translate(${nx * -10}px, ${ny * -8}px)`;
+      if (p2) p2.style.transform = `translate(${nx * 22}px, ${ny * 18}px) rotateY(${nx * 6}deg) rotateX(${ny * -6}deg)`;
+    });
+  }
+
+  // ===================== TILT CARDS =====================
+  const tiltCards = document.querySelectorAll('[data-tilt]');
+  tiltCards.forEach(card => {
+    const inner = card.querySelector('.tilt-inner');
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const cx = x / rect.width - 0.5;
+      const cy = y / rect.height - 0.5;
+      inner.style.transform = `rotateY(${cx * 14}deg) rotateX(${cy * -14}deg)`;
+      card.style.setProperty('--mx', `${x}px`);
+      card.style.setProperty('--my', `${y}px`);
+    });
+    card.addEventListener('mouseleave', () => {
+      inner.style.transform = 'rotateY(0deg) rotateX(0deg)';
+    });
+  });
+
+  // ===================== THREE.JS 3D SCENE — UPGRADED =====================
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const canvas3d = document.getElementById('three-canvas');
+  let scene, camera, renderer, composer, bloomPass, usingBloom = false;
+  let tiltGroup, autoRotateGroup, particles, glowShell, electrons = [];
+  let clock;
+  let mouseNX = 0, mouseNY = 0;      // normalized mouse, -0.5..0.5
+  let curTiltX = 0, curTiltY = 0;    // eased tilt values
+  let scrollProgress = 0;            // 0 at top, ~1 after hero
+
+  // Soft radial sprite so particles glow instead of rendering as flat squares
+  function createGlowTexture(){
+    const size = 128;
+    const c = document.createElement('canvas');
+    c.width = c.height = size;
+    const cx = c.getContext('2d');
+    const grd = cx.createRadialGradient(size/2, size/2, 0, size/2, size/2, size/2);
+    grd.addColorStop(0, 'rgba(255,255,255,1)');
+    grd.addColorStop(0.35, 'rgba(255,255,255,0.55)');
+    grd.addColorStop(1, 'rgba(255,255,255,0)');
+    cx.fillStyle = grd;
+    cx.fillRect(0, 0, size, size);
+    return new THREE.CanvasTexture(c);
+  }
+
+  // Classic fresnel rim-glow shader — brighter at grazing angles, for an energy-core look
+  function createFresnelMaterial(colorHex){
+    return new THREE.ShaderMaterial({
+      uniforms: {
+        glowColor: { value: new THREE.Color(colorHex) },
+        coefficient: { value: 0.45 },
+        power: { value: 2.2 }
+      },
+      vertexShader: `
+        varying vec3 vNormal;
+        varying vec3 vPositionNormal;
+        void main(){
+          vNormal = normalize( normalMatrix * normal );
+          vPositionNormal = normalize( ( modelViewMatrix * vec4(position, 1.0) ).xyz );
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: `
+        uniform vec3 glowColor;
+        uniform float coefficient;
+        uniform float power;
+        varying vec3 vNormal;
+        varying vec3 vPositionNormal;
+        void main(){
+          float intensity = pow( coefficient + dot(vNormal, vPositionNormal), power );
+          gl_FragColor = vec4( glowColor, clamp(intensity, 0.0, 1.0) );
+        }
+      `,
+      transparent: true,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+      side: THREE.FrontSide
+    });
+  }
+
+  function initThree(){
+    clock = new THREE.Clock();
+
+    renderer = new THREE.WebGLRenderer({ canvas: canvas3d, antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    scene = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.z = 9;
+
+    tiltGroup = new THREE.Group();
+    autoRotateGroup = new THREE.Group();
+    tiltGroup.add(autoRotateGroup);
+    scene.add(tiltGroup);
+
+    // wireframe icosahedron "core lattice"
+    const icoGeo = new THREE.IcosahedronGeometry(2.35, 1);
+    const wireGeo = new THREE.WireframeGeometry(icoGeo);
+    const wireMat = new THREE.LineBasicMaterial({ color: 0x4fd8ff, transparent: true, opacity: 0.5 });
+    autoRotateGroup.add(new THREE.LineSegments(wireGeo, wireMat));
+
+    // fresnel energy core (glows brighter at the rim, pulses)
+    const coreGeo = new THREE.SphereGeometry(1.05, 48, 48);
+    glowShell = new THREE.Mesh(coreGeo, createFresnelMaterial(0x9b7bff));
+    autoRotateGroup.add(glowShell);
+
+    // solid inner sphere for a dense center
+    const innerGeo = new THREE.SphereGeometry(0.55, 32, 32);
+    const innerMat = new THREE.MeshBasicMaterial({ color: 0xeef2fa, transparent: true, opacity: 0.85 });
+    autoRotateGroup.add(new THREE.Mesh(innerGeo, innerMat));
+
+    // outer thin shell for extra depth
+    const shellGeo = new THREE.IcosahedronGeometry(3.4, 0);
+    const shellWire = new THREE.WireframeGeometry(shellGeo);
+    const shellMat = new THREE.LineBasicMaterial({ color: 0x9b7bff, transparent: true, opacity: 0.14 });
+    autoRotateGroup.add(new THREE.LineSegments(shellWire, shellMat));
+
+    // gyroscopic orbit rings
+    const ringColors = [0x4fd8ff, 0x9b7bff];
+    const ringTilts = [
+      { x: 1.1, y: 0.3, z: 0.2 },
+      { x: -0.6, y: 1.3, z: 0.5 }
+    ];
+    ringTilts.forEach((tilt, i) => {
+      const ringGeo = new THREE.TorusGeometry(3.0 + i * 0.35, 0.012, 8, 128);
+      const ringMat = new THREE.MeshBasicMaterial({
+        color: ringColors[i],
+        transparent: true,
+        opacity: 0.35,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+      });
+      const ring = new THREE.Mesh(ringGeo, ringMat);
+      ring.rotation.set(tilt.x, tilt.y, tilt.z);
+      autoRotateGroup.add(ring);
+    });
+
+    // orbiting "electron" nodes travelling along independent elliptical paths
+    const electronCount = 5;
+    for (let i = 0; i < electronCount; i++) {
+      const eGeo = new THREE.SphereGeometry(0.07, 16, 16);
+      const eMat = new THREE.MeshBasicMaterial({
+        color: i % 2 === 0 ? 0x4fd8ff : 0x9b7bff,
+        transparent: true,
+        opacity: 0.95,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+      });
+      const mesh = new THREE.Mesh(eGeo, eMat);
+      autoRotateGroup.add(mesh);
+      electrons.push({
+        mesh,
+        radius: 3.0 + Math.random() * 1.4,
+        speed: 0.35 + Math.random() * 0.5,
+        offset: Math.random() * Math.PI * 2,
+        tiltY: Math.random() * Math.PI,
+        flatten: 0.35 + Math.random() * 0.3
+      });
+    }
+
+    // particle field in true 3D space, soft glow sprites, additive blending
+    const glowTex = createGlowTexture();
+    const particleCount = window.innerWidth < 768 ? 400 : 850;
+    const positions = new Float32Array(particleCount * 3);
+    for (let i = 0; i < particleCount; i++) {
+      const r = 4.5 + Math.random() * 6;
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(Math.random() * 2 - 1);
+      positions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+      positions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+      positions[i * 3 + 2] = r * Math.cos(phi);
+    }
+    const pGeo = new THREE.BufferGeometry();
+    pGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    const pMat = new THREE.PointsMaterial({
+      color: 0xbfe9ff,
+      size: 0.11,
+      map: glowTex,
+      transparent: true,
+      opacity: 0.75,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
+    });
+    particles = new THREE.Points(pGeo, pMat);
+    scene.add(particles);
+
+    // cinematic bloom, with a safe fallback if the postprocessing bundle failed to load
+    try {
+      if (window.THREE.EffectComposer && window.THREE.RenderPass && window.THREE.UnrealBloomPass) {
+        composer = new THREE.EffectComposer(renderer);
+        composer.addPass(new THREE.RenderPass(scene, camera));
+        bloomPass = new THREE.UnrealBloomPass(
+          new THREE.Vector2(window.innerWidth, window.innerHeight),
+          0.85,  // strength
+          0.55,  // radius
+          0.18   // threshold
+        );
+        composer.addPass(bloomPass);
+        usingBloom = true;
+      }
+    } catch (err) {
+      usingBloom = false;
+    }
+
+    window.addEventListener('resize', onResizeThree);
+  }
+
+  function onResizeThree(){
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    if (usingBloom && composer) composer.setSize(window.innerWidth, window.innerHeight);
+  }
+
+  window.addEventListener('mousemove', (e) => {
+    mouseNX = (e.clientX / window.innerWidth) - 0.5;
+    mouseNY = (e.clientY / window.innerHeight) - 0.5;
+  });
+
+  function onScroll3d(){
+    const heroH = window.innerHeight;
+    scrollProgress = Math.min(window.scrollY / heroH, 1.3);
+  }
+  window.addEventListener('scroll', onScroll3d, { passive: true });
+
+  function animateThree(){
+    requestAnimationFrame(animateThree);
+    const t = clock.getElapsedTime();
+
+    if (!reduceMotion) {
+      autoRotateGroup.rotation.y += 0.0022;
+      autoRotateGroup.rotation.x += 0.0008;
+      particles.rotation.y += 0.0006;
+      particles.rotation.x += 0.0002;
+
+      // breathing pulse on the fresnel core
+      const pulse = 1 + Math.sin(t * 1.4) * 0.06;
+      glowShell.scale.set(pulse, pulse, pulse);
+
+      // electrons travel independent elliptical orbits
+      electrons.forEach((e) => {
+        const a = t * e.speed + e.offset;
+        e.mesh.position.set(
+          Math.cos(a) * e.radius,
+          Math.sin(a * 1.7 + e.tiltY) * e.radius * e.flatten,
+          Math.sin(a) * e.radius
+        );
+      });
+    }
+
+    // mouse-driven tilt, eased
+    curTiltX += ((mouseNY * 0.6) - curTiltX) * 0.04;
+    curTiltY += ((mouseNX * 0.8) - curTiltY) * 0.04;
+    tiltGroup.rotation.x = curTiltX;
+    tiltGroup.rotation.y = curTiltY;
+
+    // scroll-driven depth: camera dollies back and core drifts up/scales down
+    camera.position.z = 9 + scrollProgress * 4.5;
+    tiltGroup.position.y = scrollProgress * 1.6;
+    const s = Math.max(1 - scrollProgress * 0.35, 0.6);
+    tiltGroup.scale.set(s, s, s);
+
+    if (usingBloom && composer) {
+      composer.render();
+    } else {
+      renderer.render(scene, camera);
+    }
+  }
+
+  initThree();
+  onScroll3d();
+  animateThree();
+</script>
+</body>
+</html>
